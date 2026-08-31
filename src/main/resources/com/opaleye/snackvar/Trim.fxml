@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefWidth="1280.0" prefHeight="460.0" minWidth="720.0" minHeight="360.0"
+            styleClass="app-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.opaleye.snackvar.TrimController">
+
+    <top>
+        <VBox styleClass="toolbar-surface" spacing="6.0">
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="Trim ends" styleClass="app-title" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="resetButton" onAction="#handleReset" text="Reset to suggestion" styleClass="subtle" />
+            </HBox>
+            <Label text="Left-click sets the left trim point, right-click sets the right one. Shaded regions are discarded."
+                   styleClass="hint" wrapText="true" />
+        </VBox>
+    </top>
+
+    <center>
+        <HBox spacing="6.0">
+            <padding><Insets top="12.0" right="14.0" bottom="12.0" left="14.0" /></padding>
+            <ScrollPane fx:id="tracePane" styleClass="trace-pane" HBox.hgrow="ALWAYS" fitToHeight="true">
+                <VBox>
+                    <HBox fx:id="traceHBox" />
+                    <VBox fx:id="sliderVBox" />
+                </VBox>
+            </ScrollPane>
+            <VBox spacing="4.0">
+                <Button fx:id="zoomInButton" onAction="#handleZoomIn" text="+"
+                        styleClass="icon" VBox.vgrow="ALWAYS" maxHeight="Infinity" />
+                <Button fx:id="zoomOutButton" onAction="#handleZoomOut" text="−"
+                        styleClass="icon" VBox.vgrow="ALWAYS" maxHeight="Infinity" />
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox styleClass="status-bar" spacing="10.0" alignment="CENTER_RIGHT">
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="confirmBtn" onAction="#handleConfirm" text="Confirm trimming" styleClass="primary" />
+        </HBox>
+    </bottom>
+</BorderPane>

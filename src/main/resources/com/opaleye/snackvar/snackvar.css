@@ -1,0 +1,555 @@
+/*
+ * SnackVar component styles.
+ *
+ * Structure only: every colour is a looked-up token supplied by
+ * snackvar-light.css or snackvar-dark.css, which are applied after this file.
+ * The defaults below are the light values, so the app still renders sensibly
+ * if a theme sheet ever fails to load.
+ */
+
+.root {
+    -c-bg:            #eef1f5;
+    -c-surface:       #ffffff;
+    -c-surface-alt:   #f7f9fb;
+    -c-surface-sunken:#e9edf2;
+    -c-text:          #11161d;
+    -c-text-muted:    #5b6673;
+    -c-text-faint:    #8a94a1;
+    -c-text-on-accent:#ffffff;
+    -c-border:        #dde3ea;
+    -c-border-strong: #c6cfda;
+    -c-accent:        #2563eb;
+    -c-accent-hover:  #1d4ed8;
+    -c-accent-press:  #1e40af;
+    -c-accent-soft:   #e5edff;
+    -c-danger:        #dc2626;
+    -c-danger-soft:   #fee2e2;
+    -c-shadow:        rgba(15, 23, 42, 0.10);
+    -c-shadow-strong: rgba(15, 23, 42, 0.16);
+    -c-q-high: transparent;
+    -c-q-good: #fff8d6;
+    -c-q-fair: #ffeba8;
+    -c-q-poor: #ffd28a;
+    -c-q-bad:  #ffb4a3;
+    -c-base-a: #15803d;
+    -c-base-t: #dc2626;
+    -c-base-g: #111827;
+    -c-base-c: #2563eb;
+    -c-hetero-indel: #bae6fd;
+    -c-hetero-match: #fff3b0;
+
+    -fx-font-family: "Inter", "Segoe UI", "SF Pro Text", "Helvetica Neue", "DejaVu Sans", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: -c-text;
+    -fx-background-color: -c-bg;
+    -fx-focus-color: -c-accent;
+    -fx-faint-focus-color: transparent;
+}
+
+.app-root {
+    -fx-background-color: -c-bg;
+}
+
+/* ---------------------------------------------------------------- text --- */
+
+.label {
+    -fx-text-fill: -c-text;
+}
+
+.field-label {
+    -fx-text-fill: -c-text-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.hint {
+    -fx-text-fill: -c-text-faint;
+    -fx-font-size: 11px;
+}
+
+.value-label {
+    -fx-text-fill: -c-text;
+    -fx-font-size: 13px;
+}
+
+.section-title {
+    -fx-text-fill: -c-text;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.app-title {
+    -fx-text-fill: -c-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.file-chip {
+    -fx-background-color: -c-surface-alt;
+    -fx-border-color: -c-border;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 3 10 3 10;
+    -fx-text-fill: -c-text-muted;
+    -fx-font-size: 12px;
+}
+
+.file-chip:empty {
+    -fx-opacity: 0.55;
+}
+
+/* -------------------------------------------------------------- surface --- */
+
+.card {
+    -fx-background-color: -c-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -c-border;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, -c-shadow, 10, 0, 0, 2);
+}
+
+.toolbar-surface {
+    -fx-background-color: -c-surface;
+    -fx-border-color: transparent transparent -c-border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 16 10 16;
+}
+
+.status-bar {
+    -fx-background-color: -c-surface;
+    -fx-border-color: -c-border transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 8 16 8 16;
+}
+
+.separator-v {
+    -fx-background-color: -c-border;
+    -fx-min-width: 1;
+    -fx-max-width: 1;
+    -fx-min-height: 26;
+}
+
+/* -------------------------------------------------------------- buttons --- */
+
+.button {
+    -fx-background-color: -c-surface;
+    -fx-text-fill: -c-text;
+    -fx-border-color: -c-border-strong;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 12.5px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: -c-surface-alt;
+    -fx-border-color: -c-accent;
+}
+
+.button:pressed {
+    -fx-background-color: -c-surface-sunken;
+}
+
+.button:focused {
+    -fx-border-color: -c-accent;
+}
+
+.button:disabled {
+    -fx-opacity: 0.45;
+    -fx-cursor: default;
+}
+
+.button.primary {
+    -fx-background-color: -c-accent;
+    -fx-text-fill: -c-text-on-accent;
+    -fx-border-color: transparent;
+    -fx-font-weight: bold;
+}
+
+.button.primary:hover {
+    -fx-background-color: -c-accent-hover;
+    -fx-border-color: transparent;
+}
+
+.button.primary:pressed {
+    -fx-background-color: -c-accent-press;
+}
+
+.button.subtle {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -c-text-muted;
+}
+
+.button.subtle:hover {
+    -fx-background-color: -c-surface-alt;
+    -fx-text-fill: -c-text;
+    -fx-border-color: transparent;
+}
+
+.button.danger:hover {
+    -fx-background-color: -c-danger-soft;
+    -fx-border-color: -c-danger;
+    -fx-text-fill: -c-danger;
+}
+
+/* A square button for the +/- zoom columns beside each trace. */
+.button.icon {
+    -fx-padding: 4 0 4 0;
+    -fx-min-width: 30;
+    -fx-max-width: 30;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -c-text-muted;
+}
+
+.button.icon:hover {
+    -fx-text-fill: -c-accent;
+}
+
+/* ---------------------------------------------------------------- input --- */
+
+.text-field, .text-area {
+    -fx-background-color: -c-surface;
+    -fx-text-fill: -c-text;
+    -fx-prompt-text-fill: -c-text-faint;
+    -fx-border-color: -c-border-strong;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+    -fx-padding: 6 10 6 10;
+    -fx-highlight-fill: -c-accent-soft;
+    -fx-highlight-text-fill: -c-text;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: -c-accent;
+}
+
+.text-area {
+    -fx-padding: 0;
+}
+
+.text-area .content {
+    -fx-background-color: -c-surface;
+    -fx-background-radius: 7;
+    -fx-padding: 10;
+}
+
+.check-box {
+    -fx-text-fill: -c-text;
+}
+
+.check-box .box {
+    -fx-background-color: -c-surface;
+    -fx-border-color: -c-border-strong;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 3;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -c-accent;
+    -fx-border-color: -c-accent;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -c-text-on-accent;
+}
+
+/* ---------------------------------------------------------- scroll panes --- */
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: -c-surface;
+}
+
+.trace-pane, .alignment-pane {
+    -fx-background-color: -c-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -c-border;
+    -fx-border-radius: 10;
+}
+
+.trace-pane > .viewport, .alignment-pane > .viewport {
+    -fx-background-color: -c-surface;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar > .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar > .thumb {
+    -fx-background-color: -c-border-strong;
+    -fx-background-radius: 6;
+}
+
+.scroll-bar > .thumb:hover {
+    -fx-background-color: -c-text-faint;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 11;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 11;
+}
+
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-shape: null;
+    -fx-padding: 0;
+}
+
+.corner {
+    -fx-background-color: transparent;
+}
+
+/* ------------------------------------------------------------ split pane --- */
+
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    /* Set here rather than in FXML: a CSS -fx-padding rule wins over the
+       value FXML assigns, so keeping both would silently drop the insets. */
+    -fx-padding: 12 14 8 14;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+    -fx-pref-height: 9;
+}
+
+/* The grabbable line itself, drawn thin and low-contrast. */
+.split-pane > .split-pane-divider > .horizontal-grabber,
+.split-pane > .split-pane-divider > .vertical-grabber {
+    -fx-background-color: -c-border;
+    -fx-background-radius: 2;
+    -fx-pref-height: 3;
+    -fx-pref-width: 44;
+    -fx-padding: 0;
+}
+
+.split-pane > .split-pane-divider:hover > .horizontal-grabber,
+.split-pane > .split-pane-divider:hover > .vertical-grabber {
+    -fx-background-color: -c-accent;
+}
+
+/* ----------------------------------------------------------------- table --- */
+
+.table-view {
+    -fx-background-color: -c-surface;
+    -fx-border-color: -c-border;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view > .virtual-flow > .clipped-container > .sheet > .table-row-cell {
+    -fx-background-color: -c-surface;
+    -fx-border-color: transparent transparent -c-border transparent;
+    -fx-cell-size: 30px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -c-surface-alt;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -c-border transparent;
+    -fx-size: 34px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -c-text-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: -c-text;
+    -fx-padding: 0 12 0 12;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -c-surface-alt;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: -c-surface-sunken;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -c-accent-soft;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: -c-text;
+}
+
+.table-view:focused > .virtual-flow > .clipped-container > .sheet > .table-row-cell:selected {
+    -fx-background-color: -c-accent-soft;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: -c-text-faint;
+}
+
+/* ------------------------------------------------------- alignment grid --- */
+
+/*
+ * One label per base, so this has to stay cheap. Monospaced and tightly
+ * padded, with the quality band supplied as a style class rather than an
+ * inline Background object.
+ */
+.gridPane {
+    -fx-font-family: "JetBrains Mono", "SF Mono", "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+    -fx-font-size: 12px;
+    -fx-text-fill: -c-text;
+    -fx-alignment: CENTER;
+}
+
+.grid-row-label {
+    -fx-font-family: "JetBrains Mono", "SF Mono", "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace;
+    -fx-font-size: 12px;
+    -fx-text-fill: -c-text-muted;
+    -fx-font-weight: bold;
+    -fx-padding: 0 8 0 8;
+}
+
+.grid-index {
+    -fx-text-fill: -c-text-faint;
+    -fx-font-size: 10px;
+}
+
+.q-high { -fx-background-color: -c-q-high; }
+.q-good { -fx-background-color: -c-q-good; }
+.q-fair { -fx-background-color: -c-q-fair; }
+.q-poor { -fx-background-color: -c-q-poor; }
+.q-bad  { -fx-background-color: -c-q-bad;  }
+
+.base-selected {
+    -fx-border-color: -c-accent;
+    -fx-border-width: 2;
+}
+
+.discrepancy {
+    -fx-text-fill: -c-danger;
+    -fx-font-weight: bold;
+}
+
+/* Heterozygous indel view: the indel span, and bases where both strands agree. */
+.hetero-indel { -fx-background-color: -c-hetero-indel; }
+.hetero-match { -fx-background-color: -c-hetero-match; }
+
+/* --------------------------------------------------------------- tooltip --- */
+
+.tooltip {
+    -fx-background-color: -c-text;
+    -fx-text-fill: -c-bg;
+    -fx-background-radius: 6;
+    -fx-padding: 7 10 7 10;
+    -fx-font-size: 11.5px;
+    -fx-effect: dropshadow(gaussian, -c-shadow-strong, 8, 0, 0, 2);
+}
+
+/* --------------------------------------------------------- context menu --- */
+
+.context-menu {
+    -fx-background-color: -c-surface;
+    -fx-border-color: -c-border;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, -c-shadow-strong, 14, 0, 0, 4);
+}
+
+.menu-item {
+    -fx-background-radius: 5;
+    -fx-padding: 5 10 5 10;
+}
+
+.menu-item .label {
+    -fx-text-fill: -c-text;
+}
+
+.menu-item:focused {
+    -fx-background-color: -c-accent-soft;
+}
+
+/* --------------------------------------------------------------- dialog --- */
+
+.dialog-root {
+    -fx-background-color: -c-surface;
+}
+
+.dialog-heading {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -c-text;
+}
+
+.dialog-message {
+    -fx-text-fill: -c-text;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 3;
+}
+
+.dialog-text {
+    -fx-font-family: "JetBrains Mono", "SF Mono", "Consolas", "DejaVu Sans Mono", monospace;
+    -fx-font-size: 12px;
+}
+
+/* --------------------------------------------------------------- report --- */
+
+.report-page {
+    -fx-background-color: -c-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -c-border;
+    -fx-border-radius: 8;
+    -fx-padding: 22;
+}
+
+.report-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -c-text;
+}
+
+.report-caption {
+    -fx-text-fill: -c-text-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 0 3 0;
+}
+
+.report-variant {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -c-accent;
+    -fx-padding: 10 0 2 0;
+}

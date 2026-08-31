@@ -1,0 +1,42 @@
+/*
+ * Dark palette. Mirrors every token in snackvar-light.css.
+ */
+.root {
+    -c-bg:            #0f1216;
+    -c-surface:       #1c1f26;
+    -c-surface-alt:   #23272f;
+    -c-surface-sunken:#15181e;
+
+    -c-text:          #e7eaee;
+    -c-text-muted:    #9aa4b1;
+    -c-text-faint:    #6b7684;
+    -c-text-on-accent:#0b1220;
+
+    -c-border:        #2c313a;
+    -c-border-strong: #3a414c;
+
+    -c-accent:        #60a5fa;
+    -c-accent-hover:  #7db6fb;
+    -c-accent-press:  #4b91e8;
+    -c-accent-soft:   #1b2941;
+
+    -c-danger:        #f87171;
+    -c-danger-soft:   #3a1d1d;
+
+    -c-shadow:        rgba(0, 0, 0, 0.45);
+    -c-shadow-strong: rgba(0, 0, 0, 0.60);
+
+    -c-q-high:   transparent;
+    -c-q-good:   #3a3520;
+    -c-q-fair:   #4a3f1c;
+    -c-q-poor:   #5a3d18;
+    -c-q-bad:    #5e2f26;
+
+    -c-base-a: #4ade80;
+    -c-base-t: #f87171;
+    -c-base-g: #e5e7eb;
+    -c-base-c: #60a5fa;
+
+    -c-hetero-indel: #1e3a5f;
+    -c-hetero-match: #4a4320;
+}

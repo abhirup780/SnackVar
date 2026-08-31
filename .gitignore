@@ -1,4 +1,10 @@
-/bin/
-/.settings/
+target/
+*.class
+
+# IDE / editor state
+.idea/
+*.iml
+.vscode/
+.settings/
 .classpath
 .project

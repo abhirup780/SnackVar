@@ -1,0 +1,41 @@
+SnackVar
+Copyright 2021 Young-gon Kim
+
+This product includes software originally developed by Young-gon Kim and
+colleagues, published as:
+
+    Kim YG, Kim MJ, Lee JS, Lee JA, Song JY, Cho SI, Park SS, Seong MW.
+    SnackVar: An Open-Source Software for Sanger Sequencing Analysis
+    Optimized for Clinical Use. J Mol Diagn. 2021;23:140-8.
+
+The original project is at https://github.com/Young-gonKim/SnackVar and is
+licensed under the Apache License, Version 2.0.
+
+The reference sequence set in reference/ is redistributed unmodified from the
+original project.
+
+The autocomplete text field (src/main/java/com/opaleye/snackvar/tools/
+AutoCompleteTextField.java) is derived from work by Caleb Brinkman, as noted
+in that file.
+
+This distribution bundles BioJava legacy (https://github.com/biojava/
+biojava-legacy) and OpenJFX (https://openjfx.io), each under their own terms.
+
+--------------------------------------------------------------------------
+Modifications
+--------------------------------------------------------------------------
+
+This is a modified fork. Files derived from the original carry a notice
+recording that they were changed, as required by section 4(b) of the Apache
+License, Version 2.0. Files added by this fork are marked as such.
+
+The changes are summarised under "What changed from upstream" in README.md.
+In outline: the build was moved to Maven and JavaFX was made an explicit
+dependency so the application runs on Java 11 and later, a number of
+correctness bugs were fixed, the user interface was rebuilt, and a test suite
+was added.
+
+The analysis itself -- alignment, deconvolution of heterozygous indels, and
+variant calling -- remains the work of the original authors.
+
+Modifications copyright 2026 Abhirup Sarkar.

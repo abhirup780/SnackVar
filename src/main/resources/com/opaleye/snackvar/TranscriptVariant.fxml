@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefWidth="860.0" prefHeight="540.0" minWidth="520.0" minHeight="360.0"
+            styleClass="app-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.opaleye.snackvar.reference.TVController">
+
+    <top>
+        <VBox styleClass="toolbar-surface" spacing="2.0">
+            <Label text="Choose a transcript variant" styleClass="app-title" />
+            <Label text="This GenBank file describes more than one transcript. Pick the one to number coordinates against."
+                   styleClass="hint" wrapText="true" />
+        </VBox>
+    </top>
+
+    <center>
+        <VBox>
+            <padding><Insets top="12.0" right="14.0" bottom="12.0" left="14.0" /></padding>
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn prefWidth="640.0" text="Description" />
+                    <TableColumn prefWidth="170.0" text="Transcript size (bp)" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox styleClass="status-bar" spacing="10.0" alignment="CENTER_RIGHT">
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="chooseBtn" onAction="#handleChoose" text="Use this transcript" styleClass="primary" />
+        </HBox>
+    </bottom>
+</BorderPane>

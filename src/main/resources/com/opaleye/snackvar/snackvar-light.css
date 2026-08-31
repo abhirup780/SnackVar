@@ -1,0 +1,45 @@
+/*
+ * Light palette. Only colour tokens belong here; every rule that uses them
+ * lives in snackvar.css, so the two themes cannot drift apart structurally.
+ */
+.root {
+    -c-bg:            #eef1f5;
+    -c-surface:       #ffffff;
+    -c-surface-alt:   #f7f9fb;
+    -c-surface-sunken:#e9edf2;
+
+    -c-text:          #11161d;
+    -c-text-muted:    #5b6673;
+    -c-text-faint:    #8a94a1;
+    -c-text-on-accent:#ffffff;
+
+    -c-border:        #dde3ea;
+    -c-border-strong: #c6cf da;
+    -c-border-strong: #c6cfda;
+
+    -c-accent:        #2563eb;
+    -c-accent-hover:  #1d4ed8;
+    -c-accent-press:  #1e40af;
+    -c-accent-soft:   #e5edff;
+
+    -c-danger:        #dc2626;
+    -c-danger-soft:   #fee2e2;
+
+    -c-shadow:        rgba(15, 23, 42, 0.10);
+    -c-shadow-strong: rgba(15, 23, 42, 0.16);
+
+    /* Phred quality bands behind each base in the alignment grid. */
+    -c-q-high:   transparent;
+    -c-q-good:   #fff8d6;
+    -c-q-fair:   #ffeba8;
+    -c-q-poor:   #ffd28a;
+    -c-q-bad:    #ffb4a3;
+
+    -c-base-a: #15803d;
+    -c-base-t: #dc2626;
+    -c-base-g: #111827;
+    -c-base-c: #2563eb;
+
+    -c-hetero-indel: #bae6fd;
+    -c-hetero-match: #fff3b0;
+}

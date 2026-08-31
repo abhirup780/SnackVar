@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefWidth="700.0" prefHeight="620.0" minWidth="520.0" styleClass="app-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.opaleye.snackvar.settings.SettingsController">
+
+    <top>
+        <VBox styleClass="toolbar-surface" spacing="2.0">
+            <Label text="Advanced settings" styleClass="app-title" />
+            <Label text="These defaults suit most traces. Change them only when a run needs refining."
+                   styleClass="hint" wrapText="true" />
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="22.0">
+                <padding><Insets top="18.0" right="20.0" bottom="18.0" left="20.0" /></padding>
+
+                <VBox spacing="7.0">
+                    <Label text="GAP OPENING PENALTY" styleClass="field-label" />
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <TextField fx:id="tf_gapOpenPenalty" prefWidth="96.0" />
+                        <Label text="Default 30. Heterozygous indel optimisation uses 200 or higher."
+                               styleClass="hint" wrapText="true" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                    <CheckBox fx:id="heteroIndelCheckBox"
+                              text="Heterozygous indel mode (raises the penalty to 200)" />
+                </VBox>
+
+                <VBox spacing="7.0">
+                    <Label text="CUTOFF FOR DOUBLE PEAK DETECTION" styleClass="field-label" />
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <TextField fx:id="tf_secondPeakCutoff" prefWidth="96.0" />
+                        <Label text="Germline 0.3–0.4, somatic 0.1–0.2. A lower value finds more variants and more false positives."
+                               styleClass="hint" wrapText="true" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="7.0">
+                    <Label text="TRIM WITHOUT CONFIRMATION" styleClass="field-label" />
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <TextField fx:id="tf_trimWithoutConfirm" prefWidth="96.0" />
+                        <Label text="bp" styleClass="hint" />
+                        <Label text="Automatic trimming asks for confirmation when it would cut more than this. Recommended 30–50."
+                               styleClass="hint" wrapText="true" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="7.0">
+                    <Label text="CONSECUTIVE MATCHES ENDING A DELINS SEARCH" styleClass="field-label" />
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <TextField fx:id="tf_delinsCutoff" prefWidth="96.0" />
+                        <Label text="Default 5, range 1–10." styleClass="hint" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                    <Label text="On high-quality traces a higher value gives more accurate delins calls. On poor-quality traces, raising it tends to call delins with longer inserted sequence, and lowering it tends to call shorter insertions, or separate ins/del variants instead of a delins."
+                           styleClass="hint" wrapText="true" />
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox styleClass="status-bar" spacing="10.0" alignment="CENTER_RIGHT">
+            <Button fx:id="btn_default" onAction="#handleDefault" text="Restore defaults" styleClass="subtle" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btn_cancel" onAction="#handleCancel" text="Cancel" />
+            <Button fx:id="btn_confirm" onAction="#handleConfirm" text="Apply" styleClass="primary" />
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefWidth="1200.0" prefHeight="900.0" minWidth="720.0" minHeight="480.0"
+            styleClass="app-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.opaleye.snackvar.report.ReportController">
+
+    <top>
+        <HBox styleClass="toolbar-surface" spacing="10.0" alignment="CENTER_LEFT">
+            <Label text="SnackVar report" styleClass="app-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#handlePrint" text="Print…" styleClass="primary" />
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true">
+            <VBox fx:id="outerVBox" spacing="16.0">
+                <padding><Insets top="16.0" right="20.0" bottom="16.0" left="20.0" /></padding>
+
+                <VBox fx:id="vBox" spacing="10.0" styleClass="report-page">
+                    <Label text="SnackVar Report" styleClass="report-title" />
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <Label text="ID" styleClass="field-label" />
+                        <TextField prefWidth="260.0" />
+                        <Label text="DESCRIPTION" styleClass="field-label" />
+                        <TextField prefWidth="520.0" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <Label text="REFERENCE SEQUENCE" styleClass="field-label" />
+                        <Label fx:id="refSeqLabel" styleClass="value-label" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

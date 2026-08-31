@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.opaleye</groupId>
+  <artifactId>snackvar</artifactId>
+  <version>3.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>SnackVar</name>
+  <description>Sanger sequencing analysis for clinical use</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Target 17 so the build runs on any current LTS JDK (17, 21, 25). -->
+    <maven.compiler.release>17</maven.compiler.release>
+
+    <!-- JavaFX 21 is the LTS line and supports JDK 17+. -->
+    <javafx.version>21.0.9</javafx.version>
+    <!-- Native classifier bundled into the fat jar. Override to cross-build:
+         -Djavafx.platform=win | mac | mac-aarch64 | linux | linux-aarch64 -->
+    <javafx.platform>linux</javafx.platform>
+
+    <biojava.legacy.version>1.9.7</biojava.legacy.version>
+    <junit.version>5.11.3</junit.version>
+
+    <main.class>com.opaleye.snackvar.Launcher</main.class>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>${javafx.platform}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>${javafx.platform}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>${javafx.platform}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>${javafx.platform}</classifier>
+    </dependency>
+
+    <!-- BioJava legacy: ABI trace parsing + GenBank reading. 1.9.3 -> 1.9.7. -->
+    <dependency>
+      <groupId>org.biojava</groupId>
+      <artifactId>core</artifactId>
+      <version>${biojava.legacy.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.biojava</groupId>
+      <artifactId>sequencing</artifactId>
+      <version>${biojava.legacy.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>snackvar</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-Xlint:all,-serial,-this-escape</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.2</version>
+      </plugin>
+
+      <!-- mvn javafx:run -->
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+          <mainClass>com.opaleye.snackvar.MainStage</mainClass>
+        </configuration>
+      </plugin>
+
+      <!-- Single runnable jar: java -jar target/snackvar.jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>${main.class}</mainClass>
+                </transformer>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>module-info.class</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>platform-linux</id>
+      <activation><os><family>unix</family><name>Linux</name></os></activation>
+      <properties><javafx.platform>linux</javafx.platform></properties>
+    </profile>
+    <profile>
+      <id>platform-windows</id>
+      <activation><os><family>windows</family></os></activation>
+      <properties><javafx.platform>win</javafx.platform></properties>
+    </profile>
+    <profile>
+      <id>platform-mac</id>
+      <activation><os><family>mac</family></os></activation>
+      <properties><javafx.platform>mac</javafx.platform></properties>
+    </profile>
+  </profiles>
+</project>

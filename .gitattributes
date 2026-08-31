@@ -1,0 +1,18 @@
+# Source and docs are LF everywhere.
+*.java  text eol=lf
+*.xml   text eol=lf
+*.fxml  text eol=lf
+*.css   text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.sh    text eol=lf
+*.bat   text eol=crlf
+
+# Reference sequences are data redistributed byte-for-byte from upstream.
+# Never normalise them: rewriting content would change every blob. Marked
+# generated so GitHub collapses them in diffs rather than rendering 53,657
+# files nobody reviews by hand.
+reference/** -text linguist-generated
+
+# Screenshots.
+*.png binary

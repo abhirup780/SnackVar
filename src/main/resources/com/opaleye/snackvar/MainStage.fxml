@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+  Everything is laid out with growth constraints rather than absolute
+  layoutX/layoutY, so the window resizes. The original pinned every control to
+  a fixed coordinate inside a 1258x868 AnchorPane, which meant the UI was
+  unusable on a smaller display and wasted space on a larger one.
+-->
+<BorderPane fx:id="root" prefHeight="900.0" prefWidth="1320.0" minWidth="900.0" minHeight="600.0"
+            styleClass="app-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.opaleye.snackvar.RootController">
+
+    <top>
+        <VBox styleClass="toolbar-surface" spacing="10.0">
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="SnackVar" styleClass="app-title" />
+                <Label fx:id="versionLabel" styleClass="hint" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="btn_settings" onAction="#handleSettings" text="Advanced" styleClass="subtle" />
+                <Button fx:id="themeToggle" onAction="#handleToggleTheme" text="Dark mode" styleClass="subtle" />
+                <Button fx:id="runButton" onAction="#handleRun" text="Run analysis" styleClass="primary" />
+            </HBox>
+
+            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                <Label text="REFERENCE" styleClass="field-label" />
+                <HBox fx:id="leftHBox" alignment="CENTER_LEFT" spacing="8.0" />
+                <Button onAction="#handleOpenRef" text="Open reference file…" />
+                <Region styleClass="separator-v" />
+                <Button onAction="#handleOpenFwdTrace" text="Open forward trace…" />
+                <Button onAction="#handleOpenRevTrace" text="Open reverse trace…" />
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <Label fx:id="offsetLabel" text="FIRST cDNA #" styleClass="field-label" />
+                <TextField fx:id="tf_firstNumber" text="1" prefWidth="64.0" />
+                <Region styleClass="separator-v" />
+                <Label text="JUMP TO c." styleClass="field-label" />
+                <TextField fx:id="goPositionText" prefWidth="84.0" promptText="101" />
+                <Button onAction="#handleGo" text="Go" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <!-- Vertical split so the trace panes and the variant list can be
+             resized against each other; the original heights were fixed. -->
+        <SplitPane orientation="VERTICAL" dividerPositions="0.17, 0.44, 0.71"
+                   styleClass="app-root">
+
+            <!-- Alignment -->
+            <VBox spacing="6.0" minHeight="80.0">
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Label text="Alignment" styleClass="section-title" />
+                    <Label fx:id="refFileLabel" styleClass="file-chip" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label text="Click a base to focus it in both traces" styleClass="hint" />
+                </HBox>
+                <ScrollPane fx:id="alignmentPane" styleClass="alignment-pane"
+                            VBox.vgrow="ALWAYS" fitToHeight="true" />
+            </VBox>
+
+            <!-- Forward trace -->
+            <VBox spacing="6.0" minHeight="130.0">
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Label text="Forward trace" styleClass="section-title" />
+                    <Label fx:id="fwdTraceFileLabel" styleClass="file-chip" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button fx:id="fwdHeteroBtn" onAction="#handleFwdHetero" text="Heterozygous indel view"
+                            visible="false" managed="false" />
+                    <Button fx:id="fwdEditTrimBtn" onAction="#handleFwdEditTrimming" text="Edit trimming"
+                            visible="false" managed="false" />
+                    <Button fx:id="fwdRemoveBtn" onAction="#handleRemoveFwd" text="Remove"
+                            styleClass="danger" visible="false" managed="false" />
+                </HBox>
+                <HBox spacing="6.0" VBox.vgrow="ALWAYS">
+                    <ScrollPane fx:id="fwdPane" styleClass="trace-pane" HBox.hgrow="ALWAYS" fitToHeight="true" />
+                    <VBox spacing="4.0">
+                        <Button fx:id="fwdZoomInButton" onAction="#handleFwdZoomIn" text="+"
+                                styleClass="icon" VBox.vgrow="ALWAYS" maxHeight="Infinity" />
+                        <Button fx:id="fwdZoomOutButton" onAction="#handleFwdZoomOut" text="−"
+                                styleClass="icon" VBox.vgrow="ALWAYS" maxHeight="Infinity" />
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Reverse trace -->
+            <VBox spacing="6.0" minHeight="130.0">
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Label text="Reverse trace" styleClass="section-title" />
+                    <Label fx:id="revTraceFileLabel" styleClass="file-chip" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button fx:id="revHeteroBtn" onAction="#handleRevHetero" text="Heterozygous indel view"
+                            visible="false" managed="false" />
+                    <Button fx:id="revEditTrimBtn" onAction="#handleRevEditTrimming" text="Edit trimming"
+                            visible="false" managed="false" />
+                    <Button fx:id="revRemoveBtn" onAction="#handleRemoveRev" text="Remove"
+                            styleClass="danger" visible="false" managed="false" />
+                </HBox>
+                <HBox spacing="6.0" VBox.vgrow="ALWAYS">
+                    <ScrollPane fx:id="revPane" styleClass="trace-pane" HBox.hgrow="ALWAYS" fitToHeight="true" />
+                    <VBox spacing="4.0">
+                        <Button fx:id="revZoomInButton" onAction="#handleRevZoomIn" text="+"
+                                styleClass="icon" VBox.vgrow="ALWAYS" maxHeight="Infinity" />
+                        <Button fx:id="revZoomOutButton" onAction="#handleRevZoomOut" text="−"
+                                styleClass="icon" VBox.vgrow="ALWAYS" maxHeight="Infinity" />
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Variants -->
+            <VBox spacing="6.0" minHeight="140.0">
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Label text="Detected variants" styleClass="section-title" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label text="Double-click to select text · Del to remove" styleClass="hint" />
+                    <Button fx:id="removeVariant" onAction="#handleRemoveVariant" text="Remove variant"
+                            styleClass="danger" />
+                </HBox>
+                <TableView fx:id="variantTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn prefWidth="330.0" text="Variant" />
+                        <TableColumn prefWidth="95.0" text="Zygosity" />
+                        <TableColumn prefWidth="95.0" text="Frequency" />
+                        <TableColumn prefWidth="95.0" text="From" />
+                        <TableColumn prefWidth="560.0" text="Equivalent expressions" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <HBox styleClass="status-bar" spacing="10.0" alignment="CENTER_LEFT">
+            <Label text="Double-peak cutoff" styleClass="field-label" />
+            <Label fx:id="cutoffLabel" styleClass="value-label" />
+            <Region styleClass="separator-v" />
+            <Label fx:id="referenceStatusLabel" styleClass="hint" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#handleTermsOfUse" text="Terms of use" styleClass="subtle" />
+            <Button onAction="#handleGenerateReport" text="Generate report" />
+        </HBox>
+    </bottom>
+</BorderPane>
