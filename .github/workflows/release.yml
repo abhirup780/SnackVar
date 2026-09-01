@@ -174,8 +174,11 @@ jobs:
             throw "RunProgram target '$target' is not present in app.7z"
           }
 
-          # Backslashes are escaped in the SFX config format.
-          $escaped = $target -replace '\\', '\\\\'
+          # Backslashes are escaped in the SFX config format. String.Replace is
+          # used rather than -replace: the latter takes a regex and a .NET
+          # replacement string, where a backslash is literal, which makes the
+          # correct number of them genuinely hard to get right.
+          $escaped = $target.Replace('\', '\\')
 
           $config = @(
             ';!@Install@!UTF-8!',
@@ -193,8 +196,13 @@ jobs:
           $head = [System.IO.File]::ReadAllBytes($out)[0..200000]
           $text = [System.Text.Encoding]::ASCII.GetString($head)
           if ($text -notmatch 'RunProgram="([^"]*)"') { throw 'no RunProgram in the built exe' }
-          Write-Host "Embedded RunProgram: $($Matches[1])"
-          if ($Matches[1] -ne $escaped) { throw "embedded RunProgram is '$($Matches[1])', expected '$escaped'" }
+          $embedded = $Matches[1]
+          Write-Host "Embedded RunProgram: $embedded"
+          # Compare what the SFX will actually resolve, not the escaped text, so
+          # an escaping mistake cannot pass by being wrong in both places.
+          $resolved = $embedded.Replace('\\', '\')
+          Write-Host "Resolves to: $resolved"
+          if ($resolved -ne $target) { throw "RunProgram resolves to '$resolved', expected '$target'" }
 
           Get-Item $out | Select-Object Name, Length
 
