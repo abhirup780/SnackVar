@@ -157,10 +157,30 @@ jobs:
 
           7z a -t7z -mx=9 app.7z .\dist\SnackVar | Out-Null
 
+          # Locate the launcher rather than assuming where it is: jpackage uses
+          # a different layout per platform. On Windows the executable sits at
+          # the top of the app folder (SnackVar\SnackVar.exe); on Linux it is
+          # under bin/. Hardcoding the Linux path here shipped a portable exe
+          # that extracted fine and then failed to start.
+          $distRoot = (Resolve-Path .\dist).Path
+          $exe = Get-ChildItem -Path .\dist -Filter 'SnackVar.exe' -Recurse -File |
+                 Select-Object -First 1
+          if (-not $exe) { throw 'SnackVar.exe not found in the app image' }
+          $target = $exe.FullName.Substring($distRoot.Length + 1)
+          Write-Host "Launcher inside the archive: $target"
+
+          # Fail here rather than at the user's double-click.
+          if (-not (7z l app.7z | Select-String -SimpleMatch $target)) {
+            throw "RunProgram target '$target' is not present in app.7z"
+          }
+
+          # Backslashes are escaped in the SFX config format.
+          $escaped = $target -replace '\\', '\\\\'
+
           $config = @(
             ';!@Install@!UTF-8!',
             'Title="SnackVar"',
-            'RunProgram="SnackVar\\bin\\SnackVar.exe"',
+            "RunProgram=`"$escaped`"",
             'GUIMode="2"',
             ';!@InstallEnd@!'
           ) -join "`r`n"
@@ -168,6 +188,14 @@ jobs:
 
           $out = "out\snackvar-v$env:APP_VERSION-win-portable.exe"
           cmd /c "copy /b 7zSD.sfx + config.txt + app.7z `"$out`"" | Out-Null
+
+          # Read the RunProgram back out of the finished executable.
+          $head = [System.IO.File]::ReadAllBytes($out)[0..200000]
+          $text = [System.Text.Encoding]::ASCII.GetString($head)
+          if ($text -notmatch 'RunProgram="([^"]*)"') { throw 'no RunProgram in the built exe' }
+          Write-Host "Embedded RunProgram: $($Matches[1])"
+          if ($Matches[1] -ne $escaped) { throw "embedded RunProgram is '$($Matches[1])', expected '$escaped'" }
+
           Get-Item $out | Select-Object Name, Length
 
       - uses: actions/upload-artifact@v5
