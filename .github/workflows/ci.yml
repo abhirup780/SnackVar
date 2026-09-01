@@ -1,0 +1,38 @@
+name: build
+
+on:
+  push:
+    branches: [master, modernise]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # reference/ is 53,657 files and ~470 MB, and the tests that touch it
+          # skip themselves when it is absent. Fetch code only.
+          sparse-checkout: |
+            /*
+            !/reference
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # FxmlLoadTest needs a display and skips itself without one; give it one
+      # so the JavaFX views are actually inflated in CI.
+      - name: Start virtual display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb
+          Xvfb :99 -screen 0 1600x1200x24 &
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+
+      - name: Build and test
+        run: ./mvnw -B verify

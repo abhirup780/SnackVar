@@ -20,7 +20,11 @@
     <!-- JavaFX 21 is the LTS line and supports JDK 17+. -->
     <javafx.version>21.0.9</javafx.version>
     <!-- Native classifier bundled into the fat jar. Override to cross-build:
-         -Djavafx.platform=win | mac | mac-aarch64 | linux | linux-aarch64 -->
+         mvn -Djavafx.platform=win clean package
+         Valid values: win | mac | mac-aarch64 | linux | linux-aarch64.
+         Always pass `clean` when switching: maven-shade takes the project
+         artifact as its own input, so packaging over a jar built for another
+         platform produces one holding both platforms' native libraries. -->
     <javafx.platform>linux</javafx.platform>
 
     <biojava.legacy.version>1.9.7</biojava.legacy.version>

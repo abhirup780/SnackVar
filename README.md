@@ -17,13 +17,50 @@ rebuilt.
 
 You need **Java 17 or newer** ([Temurin](https://adoptium.net/temurin/releases/)
 is a good choice). You do *not* need to install JavaFX — it ships inside the jar.
+Nothing here requires administrator rights.
 
 ```sh
 git clone <this repo> && cd snackvar-modern
 ./run.sh
 ```
 
-On Windows, double-click `run.bat`.
+On Windows, double-click `run.bat`. Neither script needs Maven installed: they
+fall back to the bundled Maven wrapper (`mvnw`), which fetches Maven itself.
+
+### Windows without administrator rights
+
+Every step works from a normal user account.
+
+**Easiest — a portable bundle.** Each release carries a `-win` zip built with
+`jpackage`, containing the application *and* a Java runtime. Unzip it anywhere
+you can write, such as your Desktop, and run `SnackVar\SnackVar.exe`. No
+installer, no Java, no elevation. Then follow the reference-sequence note in the
+zip.
+
+**Or build it yourself.**
+
+1. Download the Temurin **`.zip`** for Windows (not the `.msi`) from
+   [adoptium.net](https://adoptium.net/temurin/releases/) and extract it. The
+   `.zip` needs no installer.
+2. Either set `JAVA_HOME` to the extracted folder, or rename it to `jdk` and
+   drop it next to `run.bat` — the script looks there first. It also finds
+   per-user installs under `%LOCALAPPDATA%\Programs\Eclipse Adoptium` and
+   `%USERPROFILE%\.jdks`.
+3. Double-click `run.bat`.
+
+The application only ever writes to your own profile: preferences go to
+`HKEY_CURRENT_USER` via the Java Preferences API, and any sequences you add go
+to `%USERPROFILE%\.snackvar`. Nothing touches `Program Files`, system-wide
+registry keys, or services.
+
+**Note:** a jar built on Linux will *not* run on Windows — it carries Linux
+JavaFX natives. Build the Windows one with:
+
+```sh
+mvn -Djavafx.platform=win clean package
+```
+
+The `clean` is required when switching platform; see the comment in `pom.xml`.
 
 Once built, the jar carries its own JavaFX runtime and needs nothing else installed:
 
@@ -169,11 +206,18 @@ mvn javafx:run      # run from source
 mvn package         # build target/snackvar.jar
 ```
 
-Building for another platform bundles that platform's JavaFX natives:
+Building for another platform bundles that platform's JavaFX natives. Pass
+`clean` as well — maven-shade takes the project artifact as its own input, so
+packaging over a jar built for a different platform yields one carrying both:
 
 ```sh
-mvn -Djavafx.platform=win package           # also: mac, mac-aarch64, linux-aarch64
+mvn -Djavafx.platform=win clean package     # also: mac, mac-aarch64, linux-aarch64
 ```
+
+`./mvnw` works in place of `mvn` everywhere above and needs no Maven installed.
+
+Pushing a `v*` tag builds a self-contained bundle per platform with `jpackage`
+and attaches them to a GitHub release.
 
 ### Tests
 
