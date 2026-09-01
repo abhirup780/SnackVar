@@ -25,14 +25,14 @@ jobs:
             archive: zip
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           sparse-checkout: |
             /*
             !/reference
           sparse-checkout-cone-mode: false
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -150,7 +150,7 @@ jobs:
           $want = '317dd834d6bbfd95433488b832e823cd3d4d420101436422c03af88507dd1370'
           if ($got -ne $want) { throw "LZMA SDK checksum mismatch: got $got" }
 
-          7z e $sdk 'bin/7zSD.sfx' -o. -y | Out-Null
+          7z e $sdk 'bin/7zSD.sfx' -y | Out-Null
           $sfxGot = (Get-FileHash '7zSD.sfx' -Algorithm SHA256).Hash.ToLower()
           $sfxWant = '436be3c4bada675a682802929384b548100f710b3ceaa87c9b2c7150963346b8'
           if ($sfxGot -ne $sfxWant) { throw "7zSD.sfx checksum mismatch: got $sfxGot" }
@@ -170,7 +170,7 @@ jobs:
           cmd /c "copy /b 7zSD.sfx + config.txt + app.7z `"$out`"" | Out-Null
           Get-Item $out | Select-Object Name, Length
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: snackvar-${{ matrix.platform }}
           path: out/*
@@ -182,7 +182,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: artifacts
       - uses: softprops/action-gh-release@v2
