@@ -45,6 +45,19 @@ jobs:
         shell: bash
         run: ./mvnw -B -DskipTests -Djavafx.platform=${{ matrix.platform }} clean package
 
+      # jpackage requires a numeric --app-version. A tag supplies one; a manual
+      # run does not, so fall back to the version in the pom.
+      - name: Resolve version
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version=$(./mvnw -B -q help:evaluate -Dexpression=project.version -DforceStdout | tail -1)
+          fi
+          echo "Resolved version: $version"
+          echo "APP_VERSION=$version" >> "$GITHUB_ENV"
+
       - name: Stage the jar on its own
         shell: bash
         run: mkdir -p staging && cp target/snackvar.jar staging/
@@ -63,7 +76,7 @@ jobs:
           jpackage \
             --type app-image \
             --name SnackVar \
-            --app-version "${GITHUB_REF_NAME#v}" \
+            --app-version "$APP_VERSION" \
             --input staging \
             --main-jar snackvar.jar \
             --main-class com.opaleye.snackvar.Launcher \
@@ -110,7 +123,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p out
-          name="snackvar-${GITHUB_REF_NAME}-${{ matrix.platform }}"
+          name="snackvar-v${APP_VERSION}-${{ matrix.platform }}"
           if [ "${{ matrix.archive }}" = "zip" ]; then
             (cd dist && 7z a -tzip "../out/${name}.zip" . >/dev/null 2>&1 \
               || zip -qr "../out/${name}.zip" .)
@@ -153,7 +166,7 @@ jobs:
           ) -join "`r`n"
           [System.IO.File]::WriteAllText("$PWD\config.txt", $config + "`r`n")
 
-          $out = "out\snackvar-$env:GITHUB_REF_NAME-win-portable.exe"
+          $out = "out\snackvar-v$env:APP_VERSION-win-portable.exe"
           cmd /c "copy /b 7zSD.sfx + config.txt + app.7z `"$out`"" | Out-Null
           Get-Item $out | Select-Object Name, Length
 
