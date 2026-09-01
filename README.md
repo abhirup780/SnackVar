@@ -31,11 +31,19 @@ fall back to the bundled Maven wrapper (`mvnw`), which fetches Maven itself.
 
 Every step works from a normal user account.
 
-**Easiest — a portable bundle.** Each release carries a `-win` zip built with
-`jpackage`, containing the application *and* a Java runtime. Unzip it anywhere
-you can write, such as your Desktop, and run `SnackVar\SnackVar.exe`. No
-installer, no Java, no elevation. Then follow the reference-sequence note in the
-zip.
+Each release carries two Windows downloads. Both contain the application **and
+a Java runtime** — nothing else needs installing, and neither asks for
+elevation.
+
+| | | |
+|---|---|---|
+| `snackvar-vX-win.zip` | **Recommended.** ~76 MB | Unzip anywhere you can write and run `SnackVar\SnackVar.exe`. Starts instantly. |
+| `snackvar-vX-win-portable.exe` | A single file | Self-extracting: unpacks to a temporary folder and launches. One file to copy, but a few seconds slower every start. |
+
+For the single-file build, put reference sequences in
+`%USERPROFILE%\.snackvar\reference` — it runs from a temporary folder, so a
+`reference` folder beside the `.exe` will not be seen. For the zip, either
+location works.
 
 **Or build it yourself.**
 
@@ -52,6 +60,11 @@ The application only ever writes to your own profile: preferences go to
 `HKEY_CURRENT_USER` via the Java Preferences API, and any sequences you add go
 to `%USERPROFILE%\.snackvar`. Nothing touches `Program Files`, system-wide
 registry keys, or services.
+
+The bundled runtime is trimmed to the modules the application actually uses,
+which takes it from about 180 MB to 76 MB. Because a missing module would only
+show up at run time, the release build runs the entire test suite against that
+trimmed runtime before publishing it.
 
 **Note:** a jar built on Linux will *not* run on Windows — it carries Linux
 JavaFX natives. Build the Windows one with:

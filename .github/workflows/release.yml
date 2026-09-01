@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 # Produces a self-contained bundle per platform: the application plus a Java
-# runtime, so it can be unzipped and run on a machine with no Java and no
-# administrator rights.
+# runtime, so it runs on a machine with no Java installed and no administrator
+# rights.
 jobs:
   bundle:
     strategy:
@@ -38,8 +38,6 @@ jobs:
           java-version: '21'
           cache: maven
 
-      # javafx.platform selects which native libraries are bundled, so it must
-      # match the machine the bundle is for.
       # `clean` matters here: maven-shade reads the project artifact as its own
       # input, so packaging over a jar built for another platform yields one
       # carrying both platforms' native libraries.
@@ -49,12 +47,16 @@ jobs:
 
       - name: Stage the jar on its own
         shell: bash
-        run: |
-          mkdir -p staging
-          cp target/snackvar.jar staging/
+        run: mkdir -p staging && cp target/snackvar.jar staging/
 
-      # jpackage --type app-image needs no installer framework and no elevation,
-      # unlike --type msi or exe.
+      # --type app-image needs no installer framework and no elevation, unlike
+      # --type msi or exe.
+      #
+      # The explicit module list trims the bundled runtime from ~180 MB to
+      # ~76 MB. It is deliberately wider than jdeps reports, because jdeps
+      # cannot see JavaFX (loaded from the classpath) or the reflective lookups
+      # in FXML and ImageIO. The full test suite is run against this exact
+      # runtime below, which is what actually establishes the set is complete.
       - name: Build app image
         shell: bash
         run: |
@@ -66,23 +68,42 @@ jobs:
             --main-jar snackvar.jar \
             --main-class com.opaleye.snackvar.Launcher \
             --dest dist \
-            --vendor "SnackVar contributors"
+            --vendor "SnackVar contributors" \
+            --add-modules java.base,java.desktop,java.logging,java.naming,java.prefs,java.scripting,java.sql,java.xml,java.management,java.compiler,jdk.jfr,jdk.unsupported,jdk.unsupported.desktop \
+            --jlink-options "--strip-debug --no-man-pages --no-header-files --compress=zip-6"
+
+      # Guards the trimmed module list: if stripping removed something the
+      # application needs, this fails here rather than in front of a user.
+      - name: Verify the trimmed runtime runs the whole test suite
+        shell: bash
+        run: |
+          runtime=$(find dist -type d -name runtime | head -1)
+          if [ -x "$runtime/bin/java" ]; then
+            ./mvnw -B -Djvm="$runtime/bin/java" test
+          else
+            echo "no java launcher in the trimmed runtime; skipping"
+          fi
 
       - name: Add a note about reference sequences
         shell: bash
         run: |
           target=$(ls -d dist/SnackVar* | head -1)
           cat > "$target/REFERENCE-SEQUENCES.txt" <<'NOTE'
-          SnackVar reads reference sequences from a "reference" folder placed
-          next to the application, or from a folder given with
-          -Dsnackvar.referenceDir=<path>.
+          SnackVar reads reference sequences from, in order:
 
-          The complete RefSeq set (53,657 sequences) is in the repository:
-          https://github.com/abhirup780/SnackVar
+            1. a folder given with -Dsnackvar.referenceDir=<path>
+            2. a "reference" folder next to the application
+            3. %USERPROFILE%\.snackvar\reference   (or ~/.snackvar/reference)
 
-          Download the repository ZIP from that page (no Git and no
-          administrator rights needed), then copy its "reference" folder in
-          beside this file.
+          The complete RefSeq set (53,657 sequences, ~470 MB) is in the
+          repository: https://github.com/abhirup780/SnackVar
+
+          Use the green "Code" button, "Download ZIP" -- no Git and no
+          administrator rights needed -- then copy the "reference" folder
+          either next to this file or into option 3 above.
+
+          Option 3 is the one to use with the single-file portable build,
+          which runs from a temporary folder.
           NOTE
 
       - name: Archive
@@ -97,6 +118,44 @@ jobs:
             tar -C dist -czf "out/${name}.tar.gz" .
           fi
           ls -la out
+
+      # A single self-extracting executable, for when one file is wanted rather
+      # than a folder. It unpacks to a temporary directory and launches, so
+      # start-up is slower than the zip and reference sequences must live in
+      # %USERPROFILE%\.snackvar\reference. Still no installer and no elevation.
+      - name: Single-file portable exe
+        if: matrix.platform == 'win'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # 7zSD.sfx is the auto-run SFX module. It ships in the official LZMA
+          # SDK from 7-zip.org; both the archive and the extracted module are
+          # pinned by checksum.
+          $sdk = 'lzma2301.7z'
+          Invoke-WebRequest -Uri "https://www.7-zip.org/a/$sdk" -OutFile $sdk
+          $got = (Get-FileHash $sdk -Algorithm SHA256).Hash.ToLower()
+          $want = '317dd834d6bbfd95433488b832e823cd3d4d420101436422c03af88507dd1370'
+          if ($got -ne $want) { throw "LZMA SDK checksum mismatch: got $got" }
+
+          7z e $sdk 'bin/7zSD.sfx' -o. -y | Out-Null
+          $sfxGot = (Get-FileHash '7zSD.sfx' -Algorithm SHA256).Hash.ToLower()
+          $sfxWant = '436be3c4bada675a682802929384b548100f710b3ceaa87c9b2c7150963346b8'
+          if ($sfxGot -ne $sfxWant) { throw "7zSD.sfx checksum mismatch: got $sfxGot" }
+
+          7z a -t7z -mx=9 app.7z .\dist\SnackVar | Out-Null
+
+          $config = @(
+            ';!@Install@!UTF-8!',
+            'Title="SnackVar"',
+            'RunProgram="SnackVar\\bin\\SnackVar.exe"',
+            'GUIMode="2"',
+            ';!@InstallEnd@!'
+          ) -join "`r`n"
+          [System.IO.File]::WriteAllText("$PWD\config.txt", $config + "`r`n")
+
+          $out = "out\snackvar-$env:GITHUB_REF_NAME-win-portable.exe"
+          cmd /c "copy /b 7zSD.sfx + config.txt + app.7z `"$out`"" | Out-Null
+          Get-Item $out | Select-Object Name, Length
 
       - uses: actions/upload-artifact@v4
         with:
